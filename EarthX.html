@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<script>
+		HOST_PREFIX= "http://earthx-layers-deployed.s3.amazonaws.com/LAYDB-1-BlueMarbleWithBathymetry-data/1072915200000/";
+		var getURL=function(level,row,col){		 		
+			return HOST_PREFIX+level+"/"+row+"/"+row+"_"+col+".jpg" ;	 		
+		}
+
+		function renderImages(){
+				var text =  "<div id='page' class='mainContainer'> <div class='bodyWrap'>"; 
+				var i;
+				var level=parseInt(document.getElementById("zoomSelect").value);
+				if(level==null) level=1;
+				var rows= Math.pow(2, level+1)-1;
+				var cols= Math.pow(2, level+2);
+				for (i = rows; i >=0; i--) {
+					text+="<div class='rowContainer'>";
+					for (j = 0; j < cols; j++) {
+				 		var tag= "<div class='cellContainer'><img src='"+getURL((level-1),i,j)+"'></div>";
+				    	text +=   tag ;
+					}
+				 	text+="</div>";   
+				}
+				text+="</div></div>";
+				document.getElementById("earth").innerHTML = text;
+		}
+
+</script>
+
+<style>
+.mainContainer { display: table; line-height:0; }
+.rowContainer { display: table-row;   }
+.bodyWrap { display: table-row-group;  }
+.cellContainer{ display: table-cell;   }
+
+</style>
+ 
+	<body onload="renderImages()" >
+		<select onchange="renderImages()" id="zoomSelect" ">
+		  <option value="1">ZoomLevel 0</option>
+		  <option value="2">ZoomLevel 1</option>
+		  <option value="3">ZoomLevel 2</option>
+		  <option value="4">ZoomLevel 3</option>
+		  <option value="5">ZoomLevel 4</option>
+		</select>	
+		<div id="earth" ></div>
+	</body>
+</html>
